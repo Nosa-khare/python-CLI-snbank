@@ -1,3 +1,4 @@
+from os import remove
 from random import randint
 from textwrap import dedent
 from datetime import datetime
@@ -45,6 +46,7 @@ def session_purpose(username, session_log):
         customer_details = acc_name, opening_balance, acc_type, acc_email, acc_number
         customer_file = open("customer", 'a+')
         customer_file.write(f"{str(customer_details)}\n")  # writes all the customer details into to the customer file
+        customer_file.close()
         session_log.write(f"{time_stamp}: @{username} Created a new {acc_type} account\n")
 
         session_purpose(username, session_log)
@@ -56,7 +58,8 @@ def session_purpose(username, session_log):
 
     elif activity == "3":
         session_log.write(f"{time_stamp}: @{username} logged out\n")
-        # remove("session")
+        session_log.close()
+        remove("session")
         home_page()
 
 
