@@ -6,7 +6,7 @@ from datetime import datetime
 time_stamp = datetime.now(tz=None)
 
 
-def session_purpose(username, session_log):
+def session_purpose(username):
     accounts = {
         "1": "Current Account",
         "2": "Savings account",
@@ -14,58 +14,67 @@ def session_purpose(username, session_log):
         "4": "Fixed Deposit Account"
     }
 
-    activity = input("1. Create a new bank account\n2. Check Account details\n3. Logout\nType in option: ")
-    if activity == "1":
-        acc_name = input("Enter Account Name: ")
-        while True:
-            try:  # to check if input is an integer
-                opening_balance = int(input("Enter Opening balance (In figures): "))
-                break
-            except ValueError:
-                print("Enter an amount in figures")
-        print(dedent("""
-                1. Current Account
-                2. Savings account
-                3. Recurring Deposit Account
-                4. Fixed Deposit Account"""))
-        while True:
-            acc_type = input("Type in Option (1, 2, 3 or 4): ")
-            if "1" or "2" or "3" or "4" in acc_type:
-                acc_type = accounts.get(acc_type)  # to get the account name from accounts dict
-                break
-            else:
-                print("Choose the correct option")
-        acc_email = input("Enter Account Email: ")
-        num_list = [1, 5, 0]
-        for x in range(7):
-            num_list.append(randint(0, 9))
-        num_list = [str(x) for x in num_list]  # converts all integers to string for joining
-        acc_number = "".join(num_list)
-        print(f"Account number: {acc_number}")
+    while True:
+        activity = input("\n1. Create a new bank account\n2. Check Account details\n3. Logout\nType in option: ")
+        if activity == "1":
+            acc_name = input("Enter Account Name: ")
+            while True:
+                try:  # to check if input is an integer
+                    opening_balance = int(input("Enter Opening balance (In figures): "))
+                    break
+                except ValueError:
+                    print("Enter an amount in figures")
+            print(dedent("""
+                    1. Current Account
+                    2. Savings account
+                    3. Recurring Deposit Account
+                    4. Fixed Deposit Account"""))
+            while True:
+                acc_type = input("Type in Option (1, 2, 3 or 4): ")
+                if "1" or "2" or "3" or "4" in acc_type:
+                    acc_type = accounts.get(acc_type)  # to get the account name from accounts dict
+                    break
+                else:
+                    print("Choose the correct option")
+            acc_email = input("Enter Account Email: ")
+            num_list = [1, 5, 0]
+            for x in range(7):
+                num_list.append(randint(0, 9))
+            num_list = [str(x) for x in num_list]  # converts all integers to string for joining
+            acc_number = "".join(num_list)
+            print(f"Account number: {acc_number}")
 
-        customer_details = acc_name, opening_balance, acc_type, acc_email, acc_number
-        customer_file = open("customer", 'a+')
-        customer_file.write(f"{str(customer_details)}\n")  # writes all the customer details into to the customer file
-        customer_file.close()
-        session_log.write(f"{time_stamp}: @{username} Created a new {acc_type} account\n")
+            customer_details = acc_name, opening_balance, acc_type, acc_email, acc_number
+            customer_file = open("customer", 'a+')
+            customer_file.write(f"{str(customer_details)}\n")  # writes all customer details into customer file
+            customer_file.close()
+            session_log = open("session", "a+")
+            session_log.write(f"{time_stamp}: @{username} Created a new {acc_type} account\n")
+            session_log.close()
 
-        session_purpose(username, session_log)
+            session_purpose(username)
 
-    elif activity == "2":
-        customer_details = open("customer", "r").read()
-        print(customer_details)
-        session_purpose(username, session_log)
+        elif activity == "2":
+            customer_details = open("customer", "r").read()
+            print(customer_details)
+            session_log = open("session", "a+")
+            session_log.write(f"{time_stamp}: @{username} checked account details\n")
+            session_log.close()
+            session_purpose(username)
 
-    elif activity == "3":
-        session_log.write(f"{time_stamp}: @{username} logged out\n")
-        session_log.close()
-        remove("session")
-        home_page()
+        elif activity == "3":
+            session_log = open("session", "a+")
+            session_log.write(f"{time_stamp}: @{username} logged out\n")
+            session_log.close()
+            remove("session")
+            home_page()
+        else:
+            print("Invalid")
 
 
 def login():
     while True:
-        username = input("Enter Username: ")
+        username = input("\nEnter Username: ")
         password = input("Enter password: ")
         staff_log = open("staff").read()
         staff_list = staff_log.splitlines()
@@ -82,8 +91,8 @@ def login():
                 logged = True
                 session_log = open("session", "w+")
                 session_log.write(f"{time_stamp}: @{username} logged in\n")
-                session_log = open("session", "a+")
-                session_purpose(username, session_log)
+                session_log.close()
+                session_purpose(username)
             if logged is False and count == len(new_list):
                 print("Unauthorised login!\nYou are not a staff\n")
 
