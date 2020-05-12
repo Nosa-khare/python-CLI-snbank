@@ -9,7 +9,8 @@ time_stamp = datetime.now(tz=None)
 
 def logout(username):
     with open("session.txt", "a+") as session_log:
-        session_log.write(f"{time_stamp}: @{username} logged out\n")
+        session_log.write(f"{time_stamp}: @{username} logged out")
+        print("\n")
     remove("session.txt")
     home_page()
 
