@@ -5,7 +5,7 @@ Replica/Immitation  of Banking system
 * Install python 3 on system
 * run code using an IDE (e.g Pycharm, VS codes, etc) code can also be run on the terminal (make sure all related files are in the same directory).*
 
-##Code features
+## Code features
 The code consits of six functions:
 
 * home_page function: This asks the user to eithe login as a staff, or close the program
